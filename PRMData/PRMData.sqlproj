@@ -65,4 +65,8 @@
   <ItemGroup>
     <None Include="PublishLocations\PRMData.publish.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\User.sql" />
+    <Build Include="dbo\Tables\Sale.sql" />
+  </ItemGroup>
 </Project>
