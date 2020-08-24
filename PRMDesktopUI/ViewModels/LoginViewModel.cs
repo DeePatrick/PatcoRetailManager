@@ -12,6 +12,9 @@ namespace PRMDesktopUI.ViewModels
     {
         private string _userName;
         private string _password;
+
+        private string _errorMessage;
+
         private readonly IAPIHelper _apiHelper;
 
         public LoginViewModel(IAPIHelper apiHelper)
@@ -42,6 +45,35 @@ namespace PRMDesktopUI.ViewModels
             }
         }
 
+
+
+        public bool IsErrorVisible
+        {
+            get {
+                bool output = false;
+                if (ErrorMessage?.Length > 0)
+                {
+                    output = true;
+                }
+                return output; 
+            }
+
+        }
+
+
+
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set
+            {
+                 _errorMessage = value;
+                NotifyOfPropertyChange(() => IsErrorVisible);
+                NotifyOfPropertyChange(() => ErrorMessage);
+               
+            }
+        }
+
         public bool CanLogIn
         {
             get
@@ -51,7 +83,6 @@ namespace PRMDesktopUI.ViewModels
                 if (UserName?.Length > 0 && Password?.Length > 0)
                 {
                     output = true;
-                    return output;
                 }
                 return output;
             }
@@ -61,12 +92,14 @@ namespace PRMDesktopUI.ViewModels
         {
             try
             {
+                ErrorMessage = "";
                 var result = await _apiHelper.Authenticate(UserName, Password);
+                
             }
             catch (Exception ex)
             {
 
-                Console.WriteLine(ex.Message);
+                ErrorMessage = ex.Message;
             }
         }
 
