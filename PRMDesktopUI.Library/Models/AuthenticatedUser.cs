@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PRMDesktopUI.Models
+namespace PRMDesktopUI.Library.Models
 {
     public class AuthenticatedUser
     {

@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
 using PRMDesktopUI.Helpers;
+using PRMDesktopUI.Library.Api;
+using PRMDesktopUI.Library.Models;
 using PRMDesktopUI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -32,6 +34,7 @@ namespace PRMDesktopUI
             _container
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>()
+                .Singleton<ILoggedInUserModel, LoggedInUserModel>()
                 .Singleton<IAPIHelper, APIHelper>();
 
             GetType().Assembly.GetTypes()

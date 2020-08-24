@@ -14,12 +14,13 @@ namespace PRMDataManager.Controllers
     {
 
         // GET: User/Details/5
-        public List<UserModel> GetUserById()
+        [HttpGet]
+        public UserModel GetUserById()
         {
             string userId = RequestContext.Principal.Identity.GetUserId();
             UserData data = new UserData();
 
-            return data.GetUserById(userId).ToList();
+            return data.GetUserById(userId).First();
         }
     }
 }
