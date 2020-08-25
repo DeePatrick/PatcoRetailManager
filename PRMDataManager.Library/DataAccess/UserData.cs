@@ -14,7 +14,7 @@ namespace PRMDataManager.Library.DataAccess
         {
             SqlDataAccess sql = new SqlDataAccess();
             var p = new { pId = Id };
-            var output = sql.LoadData<UserModel, dynamic>("dbo.spUserLookUp", p, "PRMData");
+            var output = sql.LoadData<UserModel, dynamic>("[dbo].[spUserLookUp]", p, "PRMData");
             return output;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using PRMDesktopUI.EventModels;
 using PRMDesktopUI.Library.Api;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace PRMDesktopUI.ViewModels
         private string _errorMessage;
 
         private readonly IAPIHelper _apiHelper;
+        private readonly IEventAggregator _events;
 
-        public LoginViewModel(IAPIHelper apiHelper)
+        public LoginViewModel(IAPIHelper apiHelper, IEventAggregator events)
         {
             _apiHelper = apiHelper;
+            _events = events;
         }
 
         public string UserName
@@ -97,6 +100,7 @@ namespace PRMDesktopUI.ViewModels
 
                 // Capture more info about the user
                 await _apiHelper.GetLoggedInUserInfo(result.Access_Token);
+                _events.PublishOnUIThread(new LogOnEvent());
                 
             }
             catch (Exception ex)
@@ -108,5 +112,6 @@ namespace PRMDesktopUI.ViewModels
 
     }
 }
+
 
 
