@@ -24,7 +24,7 @@ namespace PRMDesktopUI.Library.Api
         
         
         
-        HttpClient ApiClient
+        public HttpClient ApiClient
         {
             get
             {

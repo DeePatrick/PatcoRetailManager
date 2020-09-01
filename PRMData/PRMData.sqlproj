@@ -72,6 +72,6 @@
     <Build Include="dbo\Stored Procedures\spProduct_GetAll.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="PRMData.publish.xml" />
+    <None Include="PublishLocations\PRMData.publish.xml" />
   </ItemGroup>
 </Project>
