@@ -51,7 +51,7 @@ namespace PRMDesktopUI.ViewModels
             }
         }
 
-        private int _itemQuantity;
+        private int _itemQuantity = 1;
         public int ItemQuantity
         {
             get { return _itemQuantity; }
@@ -76,14 +76,14 @@ namespace PRMDesktopUI.ViewModels
             get {
 
                 //TODO replace with Calculation
-                decimal subtotal = 0;
+                decimal subTotal = 0;
 
                 foreach (var item in Cart)
                 {
 
-                    subtotal += (Convert.ToDecimal(item.Product.RetailPrice) * item.QuantityInCart);
+                    subTotal += (Convert.ToDecimal(item.Product.RetailPrice) * item.QuantityInCart);
                 }
-                return subtotal.ToString("C");
+                return subTotal.ToString("C");
             }
 
         }
@@ -92,13 +92,15 @@ namespace PRMDesktopUI.ViewModels
             get
             {
                 //TODO replace with Calculation
+                decimal subTotal = 0;
                 decimal tax = 0;
 
-                foreach(var item in Cart)
+                foreach (var item in Cart)
                 {
-
-                    tax += (Convert.ToDecimal(item.Product.RetailPrice) * item.QuantityInCart) * );
+                    subTotal += (Convert.ToDecimal(item.Product.RetailPrice) * item.QuantityInCart);
                 }
+
+                tax = subTotal;
                 return tax.ToString("C");
             }
 
@@ -118,8 +120,6 @@ namespace PRMDesktopUI.ViewModels
             get
             {
                 bool output = false;
-                // make sure something is selected
-                // make sure there is an item quantity
                 if (ItemQuantity > 0 && SelectedProduct?.QuantityInStock >= ItemQuantity)
                 {
                     output = true;
@@ -130,12 +130,30 @@ namespace PRMDesktopUI.ViewModels
         }
         public void AddToCart()
         {
-            CartItemModel item = new CartItemModel
+            CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
+
+            if(existingItem != null)
             {
-                Product = SelectedProduct,
-                QuantityInCart = ItemQuantity
-            };
-            Cart.Add(item);
+                existingItem.QuantityInCart += ItemQuantity;
+                ////HACK
+                //Cart.Remove(existingItem);
+                //Cart.Add(existingItem);
+            }
+            else
+            {
+                CartItemModel item = new CartItemModel
+                {
+                    Product = SelectedProduct,
+                    QuantityInCart = ItemQuantity
+                };
+                Cart.Add(item);
+            }
+
+            
+            SelectedProduct.QuantityInStock -= ItemQuantity;
+            ItemQuantity = 1;
+            NotifyOfPropertyChange(() => SubTotal);
+            
         }
         public bool CanRemoveFromCart
         {
