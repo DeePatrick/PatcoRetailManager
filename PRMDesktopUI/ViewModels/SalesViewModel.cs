@@ -110,7 +110,7 @@ namespace PRMDesktopUI.ViewModels
             }
 
             return taxAmount;
-        }
+        }   
 
         public string SubTotal => CalculateSubTotal().ToString("C");
         public string Tax => CalculateTax().ToString("C");
