@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using PRMDesktopUI.Library.Api;
+using PRMDesktopUI.Library.Helpers;
 using PRMDesktopUI.Library.Models;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,14 @@ using System.Threading.Tasks;
 
 namespace PRMDesktopUI.ViewModels
 {
-    public class SalesViewModel: Screen
+    public class SalesViewModel : Screen
     {
         private IProductEndpoint _productEndpoint;
-        public SalesViewModel(IProductEndpoint productEndpoint)
+        private IConfigHelper _configHelper;
+        public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper)
         {
             _productEndpoint = productEndpoint;
+            _configHelper = configHelper;
         }
         protected override async void OnViewLoaded(object view)
         {
@@ -33,7 +36,8 @@ namespace PRMDesktopUI.ViewModels
         public BindingList<ProductModel> Products
         {
             get { return _products; }
-            set { 
+            set
+            {
                 _products = value;
                 NotifyOfPropertyChange(() => Products);
             }
@@ -44,7 +48,8 @@ namespace PRMDesktopUI.ViewModels
         public ProductModel SelectedProduct
         {
             get { return _selectedProduct; }
-            set { 
+            set
+            {
                 _selectedProduct = value;
                 NotifyOfPropertyChange(() => SelectedProduct);
                 NotifyOfPropertyChange(() => CanAddToCart);
@@ -55,7 +60,8 @@ namespace PRMDesktopUI.ViewModels
         public int ItemQuantity
         {
             get { return _itemQuantity; }
-            set { 
+            set
+            {
                 _itemQuantity = value;
                 NotifyOfPropertyChange(() => ItemQuantity);
                 NotifyOfPropertyChange(() => CanAddToCart);
@@ -65,56 +71,59 @@ namespace PRMDesktopUI.ViewModels
         public BindingList<CartItemModel> Cart
         {
             get { return _cart; }
-            set { 
+            set
+            {
                 _cart = value;
                 NotifyOfPropertyChange(() => Cart);
                 NotifyOfPropertyChange(() => SubTotal);
+                NotifyOfPropertyChange(() => Tax);
+                NotifyOfPropertyChange(() => Total);
+
             }
         }
-        public string SubTotal
+
+        private decimal CalculateSubTotal()
         {
-            get {
+            decimal subTotal = 0;
 
-                //TODO replace with Calculation
-                decimal subTotal = 0;
-
-                foreach (var item in Cart)
-                {
-
-                    subTotal += (Convert.ToDecimal(item.Product.RetailPrice) * item.QuantityInCart);
-                }
-                return subTotal.ToString("C");
-            }
-
-        }
-        public string Tax
-        {
-            get
+            foreach (var item in Cart)
             {
-                //TODO replace with Calculation
-                decimal subTotal = 0;
-                decimal tax = 0;
 
-                foreach (var item in Cart)
-                {
-                    subTotal += (Convert.ToDecimal(item.Product.RetailPrice) * item.QuantityInCart);
-                }
-
-                tax = subTotal;
-                return tax.ToString("C");
+                subTotal += (item.Product.RetailPrice * item.QuantityInCart);
             }
 
+            return subTotal;
         }
+
+        private decimal CalculateTax()
+        {
+            decimal taxAmount = 0;
+            decimal taxRate = _configHelper.GetTaxRate() / 100;
+
+            foreach (var item in Cart)
+            {
+                if (item.Product.IsTaxable)
+                {
+                    taxAmount += (item.Product.RetailPrice * item.QuantityInCart * taxRate);
+                }
+                
+            }
+
+            return taxAmount;
+        }
+
+        public string SubTotal => CalculateSubTotal().ToString("C");
+        public string Tax => CalculateTax().ToString("C");
+
         public string Total
         {
             get
             {
-
-                //TODO replace with Calculation
-                return "£0.00";
+                return (CalculateSubTotal() + CalculateTax()).ToString("C");
             }
 
         }
+
         public bool CanAddToCart
         {
             get
@@ -124,7 +133,7 @@ namespace PRMDesktopUI.ViewModels
                 {
                     output = true;
                 }
-               
+
                 return output;
             }
         }
@@ -132,12 +141,12 @@ namespace PRMDesktopUI.ViewModels
         {
             CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
 
-            if(existingItem != null)
+            if (existingItem != null)
             {
                 existingItem.QuantityInCart += ItemQuantity;
-                ////HACK
-                //Cart.Remove(existingItem);
-                //Cart.Add(existingItem);
+                //HACK
+                Cart.Remove(existingItem);
+                Cart.Add(existingItem);
             }
             else
             {
@@ -149,25 +158,58 @@ namespace PRMDesktopUI.ViewModels
                 Cart.Add(item);
             }
 
-            
+
             SelectedProduct.QuantityInStock -= ItemQuantity;
             ItemQuantity = 1;
             NotifyOfPropertyChange(() => SubTotal);
-            
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+
+
         }
         public bool CanRemoveFromCart
         {
             get
             {
                 bool output = false;
-                //make sure something is selected
-                // make sure there is an item quantity
+                if (Cart.Count > 1)
+                {
+                    output = true;
+                }
+
                 return output;
             }
+
         }
+
         public void RemoveFromCart()
         {
+            CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
+
+            if (existingItem != null)
+            {
+                existingItem.QuantityInCart -= ItemQuantity;
+                //HACK
+                Cart.Add(existingItem);
+                Cart.Remove(existingItem);
+                
+            }
+            else
+            {
+                CartItemModel item = new CartItemModel
+                {
+                    Product = SelectedProduct,
+                    QuantityInCart = ItemQuantity
+                };
+                Cart.Remove(item);
+            }
+
+
+            SelectedProduct.QuantityInStock += ItemQuantity;
+            ItemQuantity = 1;
             NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
         }
         public bool CanCheckOut
         {
