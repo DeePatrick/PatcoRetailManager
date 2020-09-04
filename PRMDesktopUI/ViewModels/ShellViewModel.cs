@@ -12,16 +12,15 @@ namespace PRMDesktopUI.ViewModels
     {
         private readonly SalesViewModel _salesVM;
         private readonly IEventAggregator _events;
-        private readonly SimpleContainer _container;
 
-        public ShellViewModel(SalesViewModel salesVM, IEventAggregator events, SimpleContainer container)
+        public ShellViewModel(SalesViewModel salesVM, IEventAggregator events)
         {
             _events = events;
             _salesVM = salesVM;
-            _container = container;
 
             _events.Subscribe(this);
-            ActivateItem(_container.GetInstance<LoginViewModel>());
+
+            ActivateItem(IoC.Get<LoginViewModel>());
         }
 
         public void Handle(LogOnEvent message)
