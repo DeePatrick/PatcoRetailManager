@@ -227,6 +227,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009041352288_Initial.cs" />
+    <Compile Include="Migrations\202009041352288_Initial.designer.cs">
+      <DependentUpon>202009041352288_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -415,6 +420,11 @@
       <Project>{A7FA107A-B483-4951-B8A0-E78CACC4D114}</Project>
       <Name>PRMDataManager.Library</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202009041352288_Initial.resx">
+      <DependentUpon>202009041352288_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
