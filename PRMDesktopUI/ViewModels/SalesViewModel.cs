@@ -86,12 +86,13 @@ namespace PRMDesktopUI.ViewModels
         {
             decimal subTotal = 0;
 
-            foreach (var item in Cart)
-            {
-
-                subTotal += (item.Product.RetailPrice * item.QuantityInCart);
-            }
-
+            ////using foreach loop
+            //foreach (var item in Cart)
+            //{
+            //    subTotal += (item.Product.RetailPrice * item.QuantityInCart);
+            //}
+           
+            subTotal = Cart.Sum(x => x.Product.RetailPrice * x.QuantityInCart);
             return subTotal;
         }
 
@@ -99,17 +100,8 @@ namespace PRMDesktopUI.ViewModels
         {
             decimal taxAmount = 0;
             decimal taxRate = _configHelper.GetTaxRate() / 100;
-
-            foreach (var item in Cart)
-            {
-                if (item.Product.IsTaxable)
-                {
-                    taxAmount += (item.Product.RetailPrice * item.QuantityInCart * taxRate);
-                }
-                
-            }
-
-            return taxAmount;
+            return taxAmount = Cart.Where(item => item.Product.IsTaxable).Sum(item => item.Product.RetailPrice * item.QuantityInCart * taxRate);
+            
         }   
 
         public string SubTotal => CalculateSubTotal().ToString("C");
