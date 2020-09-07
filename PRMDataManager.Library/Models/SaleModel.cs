@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PRMDesktopUI.Library.Models
+namespace PRMDataManager.Library.Models
 {
     public class SaleModel
     {
-        public List<SaleDetailModel> SaleDetails { get; set; } = new List<SaleDetailModel>();
+        public List<SaleDetailModel> SaleDetails { get; set; }
     }
 }
-
-

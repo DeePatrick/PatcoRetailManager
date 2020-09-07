@@ -19,7 +19,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>44365</IISExpressSSLPort>
+    <IISExpressSSLPort>44325</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -222,14 +222,15 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\SaleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202009041352288_Initial.cs" />
-    <Compile Include="Migrations\202009041352288_Initial.designer.cs">
-      <DependentUpon>202009041352288_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\202009070920329_Initial.cs" />
+    <Compile Include="Migrations\202009070920329_Initial.designer.cs">
+      <DependentUpon>202009070920329_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -422,8 +423,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202009041352288_Initial.resx">
-      <DependentUpon>202009041352288_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202009070920329_Initial.resx">
+      <DependentUpon>202009070920329_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

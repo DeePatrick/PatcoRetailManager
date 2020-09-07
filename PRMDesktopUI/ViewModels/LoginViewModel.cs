@@ -11,8 +11,8 @@ namespace PRMDesktopUI.ViewModels
 {
     public class LoginViewModel : Screen
     {
-        private string _userName;
-        private string _password;
+        private string _userName ="okudopato@gmail.com";
+        private string _password ="Password=123";
 
         private string _errorMessage;
 

@@ -13,7 +13,7 @@ namespace PRMDataManager.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202009041352288_Initial"; }
+            get { return "202009070920329_Initial"; }
         }
         
         string IMigrationMetadata.Source

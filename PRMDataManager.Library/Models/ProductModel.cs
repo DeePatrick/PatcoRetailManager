@@ -8,7 +8,7 @@ namespace PRMDataManager.Library.Models
 {
     public class ProductModel
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string ProductName { get; set; }
         public string Description { get; set; }
 

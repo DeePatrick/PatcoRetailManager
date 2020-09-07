@@ -15,10 +15,12 @@ namespace PRMDesktopUI.ViewModels
     public class SalesViewModel : Screen
     {
         private IProductEndpoint _productEndpoint;
+        private ISaleEndpoint _saleEndpoint;
         private IConfigHelper _configHelper;
-        public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper)
+        public SalesViewModel(IProductEndpoint productEndpoint, ISaleEndpoint saleEndpoint, IConfigHelper configHelper)
         {
             _productEndpoint = productEndpoint;
+            _saleEndpoint = saleEndpoint;
             _configHelper = configHelper;
         }
         protected override async void OnViewLoaded(object view)
@@ -77,7 +79,7 @@ namespace PRMDesktopUI.ViewModels
                 NotifyOfPropertyChange(() => Cart);
                 NotifyOfPropertyChange(() => SubTotal);
                 NotifyOfPropertyChange(() => Tax);
-                NotifyOfPropertyChange(() => Total);
+                NotifyOfPropertyChange(() => CanCheckOut);
 
             }
         }
@@ -156,6 +158,7 @@ namespace PRMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
 
 
         }
@@ -164,7 +167,7 @@ namespace PRMDesktopUI.ViewModels
             get
             {
                 bool output = false;
-                if (Cart.Count > 1)
+                if (Cart.Count > 0)
                 {
                     output = true;
                 }
@@ -202,6 +205,7 @@ namespace PRMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
         }
         public bool CanCheckOut
         {
@@ -209,12 +213,25 @@ namespace PRMDesktopUI.ViewModels
             {
                 bool output = false;
                 //make sure something in cart
-
+                if(Cart.Count > 0)
+                    output = true;
                 return output;
             }
         }
-        public void CheckOut()
+        public async Task CheckOut()
         {
+            //create a new sales model to post to the API
+            SaleModel sale = new SaleModel();
+            foreach( var item in Cart)
+            {
+                sale.SaleDetails.Add(new SaleDetailModel
+                {
+                    ProductId = item.Product.Id,
+                    Quantity = item.QuantityInCart
+                }); 
+            }
+
+            await _saleEndpoint.PostSale(sale);
 
         }
     }
