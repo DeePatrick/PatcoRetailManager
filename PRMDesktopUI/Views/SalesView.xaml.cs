@@ -29,5 +29,10 @@ namespace PRMDesktopUI.Views
         {
 
         }
+
+        private void Products_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
