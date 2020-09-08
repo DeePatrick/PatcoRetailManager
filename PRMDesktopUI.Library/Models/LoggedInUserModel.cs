@@ -15,7 +15,7 @@ namespace PRMDesktopUI.Library.Models
         public string EmailAddress { get; set; }
         public DateTime CreateDate { get; set; }
 
-        public void LogOffUser()
+        public void ResetUserModel()
         {
             Token = "";
             Id = "";
@@ -26,4 +26,5 @@ namespace PRMDesktopUI.Library.Models
         }
     }
 }
+
 
