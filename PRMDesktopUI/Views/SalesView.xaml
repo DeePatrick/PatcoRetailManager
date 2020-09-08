@@ -41,11 +41,11 @@
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock Text="Price: " FontSize="10"/>
-                                <TextBlock Text="{Binding RetailPrice, StringFormat='{}{0:C}'}"  FontSize="12"/>
+                                <TextBlock Text="{Binding RetailPrice, StringFormat='{}{0:C}'}"  FontSize="10"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                                 <TextBlock Text="Qty: " FontSize="10"/>
-                                <TextBlock Text="{Binding QuantityInStock}" FontSize="12"/>
+                                <TextBlock Text="{Binding QuantityInStock}" FontSize="10"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
