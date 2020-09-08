@@ -37,7 +37,7 @@ namespace PRMDataManager.Library.DataAccess
                 {
                     detail.PurchasePrice = productInfo.RetailPrice * detail.Quantity;
 
-                    if (productInfo.IsTaxable) 
+                    if (productInfo.IsTaxable)
                         detail.Tax = productInfo.RetailPrice * detail.Quantity * taxRate;
                     else
                         detail.Tax = 0;
@@ -58,23 +58,36 @@ namespace PRMDataManager.Library.DataAccess
 
             sale.Total = sale.SubTotal + sale.Tax;
 
-            // Save the sale model
-            SqlDataAccess sql = new SqlDataAccess();
-            sql.SaveData("[dbo].[spSale_Insert]",sale, "PRMData");
-
-
-            // Get the Id from the sale Model
-            sale.Id = sql.LoadData<int, dynamic>("[dbo].[spSale_Lookup]", new { sale.CashierId, sale.SaleDate }, "PRMData").FirstOrDefault();
-
-            // Finish filling in the sale detail model
-            foreach( var item in details)
+            
+            using (SqlDataAccess sql = new SqlDataAccess())
             {
-                item.SaleId = sale.Id;
-                // save the sale detail model
-                sql.SaveData("[dbo].[spSaleDetail_Insert]", item, "PRMData");
-            }
-           
+                try
+                {
+                    sql.StartTransaction("PRMData");
+                    // Save the sale model
+                    sql.SaveDataInTransaction("[dbo].[spSale_Insert]", sale);
+                    // Get the Id from the sale Model
+                    sale.Id = sql.LoadDataInTransaction<int, dynamic>("[dbo].[spSale_Lookup]", new { sale.CashierId, sale.SaleDate }).FirstOrDefault();
+
+                    // Finish filling in the sale detail model
+                    foreach (var item in details)
+                    {
+                        item.SaleId = sale.Id;
+                        // save the sale detail model
+                        sql.SaveDataInTransaction("[dbo].[spSaleDetail_Insert]", item);
+                    }
+                    ////Already a transaction that is committed or rolled back 
+                    //sql.CommitTransaction();
+                }
+                catch
+                {
+                    sql.RollBackTransaction();
+                    throw;
+                }
+
+            }          
         }
+
     }
 }
 

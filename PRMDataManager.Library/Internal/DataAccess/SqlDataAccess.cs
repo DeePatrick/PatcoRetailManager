@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PRMDataManager.Library.Internal.DataAccess
 {
-    public class SqlDataAccess
+    public class SqlDataAccess : IDisposable
     {
         public string GetConnectionString(string name)
         {
@@ -21,9 +21,9 @@ namespace PRMDataManager.Library.Internal.DataAccess
         {
             string connectionString = GetConnectionString(connectionStringName);
 
-            using(IDbConnection connection = new SqlConnection(connectionString))
+            using (IDbConnection connection = new SqlConnection(connectionString))
             {
-                List<T> rows = connection.Query<T>(storedProcedure, parameters, 
+                List<T> rows = connection.Query<T>(storedProcedure, parameters,
                     commandType: CommandType.StoredProcedure).ToList();
 
                 return rows;
@@ -41,7 +41,50 @@ namespace PRMDataManager.Library.Internal.DataAccess
             }
         }
 
-        
+        //open connection/Start transaction method
+        private IDbConnection _connection;
+        private IDbTransaction _transaction;
+        public void StartTransaction(string connectionStringName)
+        {
+            string connectionString = GetConnectionString(connectionStringName);
+            _connection = new SqlConnection(connectionString);
+            _connection.Open();
+
+            _transaction = _connection.BeginTransaction();
+        }
+        public List<T> LoadDataInTransaction<T, U>(string storedProcedure, U parameters)
+        {
+            List<T> rows = _connection.Query<T>(storedProcedure, parameters,
+                commandType: CommandType.StoredProcedure, transaction: _transaction).ToList();
+            return rows;
+        }
+        public void SaveDataInTransaction<T>(string storedProcedure, T parameters)
+        {
+            _connection.Execute(storedProcedure, parameters,
+                commandType: CommandType.StoredProcedure, transaction:_transaction);
+        }
+        public void CommitTransaction()
+        {
+            _transaction?.Commit();
+            _connection?.Close();
+        }
+
+        public void RollBackTransaction()
+        {
+            _transaction?.Rollback();
+            _connection?.Close();
+        }
+
+        public void Dispose()
+        {
+            CommitTransaction();
+        }
+        //Load using the transaction
+
+        //Save using the transaction
+        //Close connection /stop transaction
+        //Dispose
     }
 }
+
 
