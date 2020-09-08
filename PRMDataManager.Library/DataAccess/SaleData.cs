@@ -76,8 +76,8 @@ namespace PRMDataManager.Library.DataAccess
                         // save the sale detail model
                         sql.SaveDataInTransaction("[dbo].[spSaleDetail_Insert]", item);
                     }
-                    ////Already a transaction that is committed or rolled back 
-                    //sql.CommitTransaction();
+                    
+                    sql.CommitTransaction();
                 }
                 catch
                 {

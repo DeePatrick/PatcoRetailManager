@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -51,6 +52,8 @@ namespace PRMDataManager.Library.Internal.DataAccess
             _connection.Open();
 
             _transaction = _connection.BeginTransaction();
+
+            isClosed = false;
         }
         public List<T> LoadDataInTransaction<T, U>(string storedProcedure, U parameters)
         {
@@ -63,21 +66,40 @@ namespace PRMDataManager.Library.Internal.DataAccess
             _connection.Execute(storedProcedure, parameters,
                 commandType: CommandType.StoredProcedure, transaction:_transaction);
         }
+        private bool isClosed = false;
         public void CommitTransaction()
         {
             _transaction?.Commit();
             _connection?.Close();
+
+            isClosed = true;
         }
 
         public void RollBackTransaction()
         {
             _transaction?.Rollback();
             _connection?.Close();
+
+            isClosed = true;
         }
 
         public void Dispose()
         {
-            CommitTransaction();
+            if (isClosed == false)
+            {
+                try
+                {
+                    CommitTransaction();
+                }
+                catch 
+                {
+                    throw;
+                }
+            }
+
+            _transaction = null;
+            _connection = null;
+           
         }
         //Load using the transaction
 
