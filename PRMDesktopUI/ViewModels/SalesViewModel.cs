@@ -125,6 +125,17 @@ namespace PRMDesktopUI.ViewModels
 
         }
 
+        private async Task ResetSalesViewModel()
+        {
+            Cart = new BindingList<CartItemDisplayModel>();
+            await LoadProducts();
+
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanRemoveFromCart);
+        }
 
         private CartItemDisplayModel _selectedCartItem;
 
@@ -177,6 +188,7 @@ namespace PRMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanRemoveFromCart);
 
 
         }
@@ -185,7 +197,7 @@ namespace PRMDesktopUI.ViewModels
             get
             {
                 bool output = false;
-                if (SelectedCartItem != null && SelectedCartItem?.Product.QuantityInStock >  0)
+                if (SelectedCartItem != null && SelectedCartItem?.Product.QuantityInStock >=  0)
                 {
                     output = true;
                 }
@@ -214,6 +226,7 @@ namespace PRMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanAddToCart);
         }
         public bool CanCheckOut
         {
@@ -240,6 +253,7 @@ namespace PRMDesktopUI.ViewModels
             }
 
             await _saleEndpoint.PostSale(sale);
+            await ResetSalesViewModel();
 
         }
     }
