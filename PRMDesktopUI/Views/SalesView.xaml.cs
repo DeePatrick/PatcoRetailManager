@@ -34,5 +34,10 @@ namespace PRMDesktopUI.Views
         {
 
         }
+
+        private void RemoveFromCart_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
