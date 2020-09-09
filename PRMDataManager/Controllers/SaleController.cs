@@ -19,5 +19,13 @@ namespace PRMDataManager.Controllers
             string userId = RequestContext.Principal.Identity.GetUserId();
             data.SaveSale(sale, userId);
         }
+
+        [Route("GetSalesReport")]
+        public List<SaleReportModel> Get()
+        {
+            SaleData data = new SaleData();
+            return data.GetSaleReports();
+        }
     }
 }
+

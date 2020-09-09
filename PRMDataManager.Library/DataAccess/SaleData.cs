@@ -88,6 +88,12 @@ namespace PRMDataManager.Library.DataAccess
             }          
         }
 
+        public List<SaleReportModel> GetSaleReports()
+        {
+            SqlDataAccess sql = new SqlDataAccess();
+            var output = sql.LoadData<SaleReportModel, dynamic>("[dbo].[spSale_SaleReport]", new { }, "PRMData");
+            return output;
+        }
     }
 }
 
