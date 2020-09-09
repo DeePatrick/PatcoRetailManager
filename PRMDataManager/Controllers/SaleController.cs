@@ -10,9 +10,9 @@ using Microsoft.AspNet.Identity;
 
 namespace PRMDataManager.Controllers
 {
-    [Authorize]
     public class SaleController : ApiController
     {
+        [Authorize(Roles = "Cashier")]
         public void Post(SaleModel sale)
         {
             SaleData data = new SaleData();
@@ -20,6 +20,7 @@ namespace PRMDataManager.Controllers
             data.SaveSale(sale, userId);
         }
 
+        [Authorize(Roles = "Manager")]
         [Route("GetSalesReport")]
         public List<SaleReportModel> Get()
         {

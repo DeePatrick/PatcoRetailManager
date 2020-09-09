@@ -11,7 +11,7 @@ using Microsoft.AspNet.Identity;
 namespace PRMDataManager.Controllers
 {
 
-   [Authorize]
+    [Authorize(Roles = "Manager, Admin")]
     public class InventoryController : ApiController
     {
         public List<InventoryModel> Get()
