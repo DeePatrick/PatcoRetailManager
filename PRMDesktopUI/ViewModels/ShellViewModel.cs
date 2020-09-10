@@ -12,8 +12,8 @@ namespace PRMDesktopUI.ViewModels
 {
     public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
     {
-        private readonly SalesViewModel _salesVM;
-        private readonly IEventAggregator _events;
+        private SalesViewModel _salesVM;
+        private IEventAggregator _events;
         private ILoggedInUserModel _user;
         private IAPIHelper _apiHelper;
 
@@ -46,6 +46,16 @@ namespace PRMDesktopUI.ViewModels
 
         }
 
+        public void UserManageMent()
+        {
+            ActivateItem(IoC.Get<UserDisplayViewModel>());
+        }
+
+        public void SaleManagement()
+        {
+            ActivateItem(IoC.Get<SalesViewModel>());
+        }
+
         public void LogOut()
         {
             _user.ResetUserModel();
@@ -60,6 +70,7 @@ namespace PRMDesktopUI.ViewModels
         }
     }
 }
+
 
 
 

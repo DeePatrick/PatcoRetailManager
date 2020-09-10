@@ -1,17 +1,9 @@
-﻿using AutoMapper;
-using Caliburn.Micro;
-using PRMDataManager.Library.Models;
+﻿using Caliburn.Micro;
 using PRMDesktopUI.Library.Api;
-using PRMDesktopUI.Library.Helpers;
 using PRMDesktopUI.Library.Models;
-using PRMDesktopUI.Model;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -20,14 +12,10 @@ namespace PRMDesktopUI.ViewModels
     public class UserDisplayViewModel : Screen
     {
         private IUserEndpoint _userEndpoint;
-        //private ISaleEndpoint _saleEndpoint;
-        //private IConfigHelper _configHelper;
-
         private readonly StatusInfoViewModel _status;
         private readonly IWindowManager _window;
 
         private BindingList<UserModel> _users;
-
         public BindingList<UserModel> Users
         {
             get { return _users; }

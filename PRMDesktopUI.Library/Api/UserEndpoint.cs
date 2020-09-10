@@ -1,5 +1,4 @@
-﻿using PRMDataManager.Library.Models;
-using PRMDesktopUI.Library.Models;
+﻿using PRMDesktopUI.Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

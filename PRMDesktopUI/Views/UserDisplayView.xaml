@@ -32,30 +32,17 @@
 
         <!-- Column 0 -->
         <TextBlock Text="Users" Grid.Row="1" Grid.Column="0"/>
-        <ListBox x:Name="Products" Grid.Row="2" Grid.Column="0" 
+        <ListBox x:Name="Users" Grid.Row="2" Grid.Column="0" 
                   MinHeight="200" MinWidth="150" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding ProductName}" />
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel Orientation="Horizontal" >
-                                <TextBlock Text="Price: " FontSize="10"/>
-                                <TextBlock Text="{Binding RetailPrice, StringFormat='{}{0:C}'}"  FontSize="10"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
-                                <TextBlock Text="Qty: " FontSize="10"/>
-                                <TextBlock Text="{Binding QuantityInStock}" FontSize="10"/>
-                            </StackPanel>
-                        </StackPanel>
+                        <TextBlock Text="{Binding Email}" FontSize="24"/>
+                        <TextBlock Text="{Binding RoleList}"  FontSize="14"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
-
-
-
 
     </Grid>
 </UserControl>
