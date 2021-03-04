@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{3C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{AE15A826-77BE-4F31-AABB-F83F171DEA20}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProjectManager", "DataProjectManager\DataProjectManager.csproj", "{D001E7F8-5B4A-442B-B245-A79FF87A9A1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{A0715AC6-9176-4061-9D02-462C67446193}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0715AC6-9176-4061-9D02-462C67446193}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0715AC6-9176-4061-9D02-462C67446193}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D001E7F8-5B4A-442B-B245-A79FF87A9A1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D001E7F8-5B4A-442B-B245-A79FF87A9A1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D001E7F8-5B4A-442B-B245-A79FF87A9A1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D001E7F8-5B4A-442B-B245-A79FF87A9A1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

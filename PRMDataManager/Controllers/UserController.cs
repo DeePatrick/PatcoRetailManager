@@ -15,9 +15,10 @@ namespace PRMDataManager.Controllers
     public class UserController : ApiController
     {
         private readonly ApplicationDbContext _context;
-        public UserController(ApplicationDbContext context)
+
+        public UserController()
         {
-            _context = context;
+            _context = new ApplicationDbContext();
         }
         // GET: User/Details/5
         [HttpGet]
