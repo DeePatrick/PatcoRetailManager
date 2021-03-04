@@ -70,5 +70,31 @@ namespace PRMDataManager.Controllers
             var roles = _context.Roles.ToDictionary(x => x.Id, x => x.Name);
             return roles;
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("api/User/Admin/AddRole")]
+        public void AddRole(UserRolePairModel pairing)
+        {
+
+            var userStore = new UserStore<ApplicationUser>(_context);
+            var userManager = new UserManager<ApplicationUser>(userStore);
+
+            userManager.AddToRole(pairing.UserId, pairing.Role);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("api/User/Admin/RemoveRole")]
+        public void RemoveRole(UserRolePairModel pairing)
+        {
+            var userStore = new UserStore<ApplicationUser>(_context);
+            var userManager = new UserManager<ApplicationUser>(userStore);
+
+            userManager.RemoveFromRole(pairing.UserId, pairing.Role);
+        }
     }
 }
+
+
+
