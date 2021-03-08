@@ -24,5 +24,10 @@ namespace PRMDesktopUI.Views
         {
             InitializeComponent();
         }
+
+        private void Users_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

@@ -80,7 +80,7 @@ namespace PRMDataManager.Controllers
             var userStore = new UserStore<ApplicationUser>(_context);
             var userManager = new UserManager<ApplicationUser>(userStore);
 
-            userManager.AddToRole(pairing.UserId, pairing.Role);
+            userManager.AddToRole(pairing.UserId, pairing.RoleName);
         }
 
         [Authorize(Roles = "Admin")]
@@ -91,7 +91,7 @@ namespace PRMDataManager.Controllers
             var userStore = new UserStore<ApplicationUser>(_context);
             var userManager = new UserManager<ApplicationUser>(userStore);
 
-            userManager.RemoveFromRole(pairing.UserId, pairing.Role);
+            userManager.RemoveFromRole(pairing.UserId, pairing.RoleName);
         }
     }
 }
