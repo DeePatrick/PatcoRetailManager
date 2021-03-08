@@ -177,7 +177,30 @@ namespace PRMDesktopUI.ViewModels
 
                 UserRoles.Add(SelectedAvailableRole);
                 AvailableRoles.Remove(SelectedAvailableRole);
-                NotifyOfPropertyChange(() => SelectedUser);
+                try
+                {
+                    await LoadUsers();
+                }
+                catch (Exception ex)
+                {
+                    dynamic settings = new ExpandoObject();
+                    settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    settings.ResizeMode = ResizeMode.NoResize;
+                    settings.Title = "System Error";
+
+                    if (ex.Message == "Unauthorized")
+                    {
+                        _status.UpdateMessage("Unauthorized Access", "You do not have permission to access the Sales Form");
+                        _window.ShowDialog(_status, null, settings);
+                    }
+                    else
+                    {
+                        _status.UpdateMessage("Fatal Exception", ex.Message);
+                        _window.ShowDialog(_status, null, settings);
+                    }
+
+                    TryClose();
+                }
             }
             catch (Exception)
             {
@@ -194,7 +217,31 @@ namespace PRMDesktopUI.ViewModels
 
                 AvailableRoles.Add(SelectedUserRole);
                 UserRoles.Remove(SelectedUserRole);
-               
+                try
+                {
+                    await LoadUsers();
+                }
+                catch (Exception ex)
+                {
+                    dynamic settings = new ExpandoObject();
+                    settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    settings.ResizeMode = ResizeMode.NoResize;
+                    settings.Title = "System Error";
+
+                    if (ex.Message == "Unauthorized")
+                    {
+                        _status.UpdateMessage("Unauthorized Access", "You do not have permission to access the Sales Form");
+                        _window.ShowDialog(_status, null, settings);
+                    }
+                    else
+                    {
+                        _status.UpdateMessage("Fatal Exception", ex.Message);
+                        _window.ShowDialog(_status, null, settings);
+                    }
+
+                    TryClose();
+                }
+
             }
             catch (Exception)
             {
@@ -202,6 +249,7 @@ namespace PRMDesktopUI.ViewModels
                 throw;
             }
         }
+
 
     }
 }

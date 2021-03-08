@@ -5,7 +5,7 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	SELECT ID 
+	SELECT [dbo].[Sale].[ID]
 	FROM Sale 
 	Where CashierId=@CashierId AND SaleDate=@SaleDate
 END
