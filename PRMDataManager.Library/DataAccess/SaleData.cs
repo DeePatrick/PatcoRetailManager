@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using PRMDataManager.Library.Internal.DataAccess;
 using PRMDataManager.Library.Models;
 
@@ -10,12 +11,18 @@ namespace PRMDataManager.Library.DataAccess
 {
     public class SaleData
     {
+        private readonly IConfiguration _config;
+
+        public SaleData(IConfiguration config)
+        {
+            _config = config;
+        }
         public void SaveSale(SaleModel saleInfo, string cashierId)
         {
 
             // Start filling in the sales detail models with save to database
             List<SaleDetailDBModel> details = new List<SaleDetailDBModel>();
-            ProductData products = new ProductData();
+            ProductData products = new ProductData(_config);
             var taxRate = ConfigHelper.GetTaxRate() / 100;
 
             foreach (var item in saleInfo.SaleDetails)
@@ -59,7 +66,7 @@ namespace PRMDataManager.Library.DataAccess
             sale.Total = sale.SubTotal + sale.Tax;
 
             
-            using (SqlDataAccess sql = new SqlDataAccess())
+            using (SqlDataAccess sql = new SqlDataAccess(_config))
             {
                 try
                 {
@@ -90,7 +97,7 @@ namespace PRMDataManager.Library.DataAccess
 
         public List<SaleReportModel> GetSaleReports()
         {
-            SqlDataAccess sql = new SqlDataAccess();
+            SqlDataAccess sql = new SqlDataAccess(_config);
             var output = sql.LoadData<SaleReportModel, dynamic>("[dbo].[spSale_SaleReport]", new { }, "PRMData");
             return output;
         }

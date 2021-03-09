@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PRMApi.Models;
 using System;
@@ -12,10 +13,14 @@ namespace PRMApi.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<IdentityUser> _usermanager;
+        private readonly RoleManager<IdentityRole> _rolemanager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, RoleManager<IdentityRole> rolemanager, UserManager<IdentityUser> usermanager)
         {
             _logger = logger;
+            _rolemanager = rolemanager;
+            _usermanager = usermanager;
         }
 
         public IActionResult Index()
@@ -23,8 +28,31 @@ namespace PRMApi.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+
+        //temp for database
+        public async Task<IActionResult> Privacy()
         {
+            //string[] roles = { "Admin", "Manager", "Cashier" };
+
+            //foreach (var role in roles)
+            //{
+            //    var roleExist = await _rolemanager.RoleExistsAsync(role);
+
+            //    if (roleExist == false)
+            //    {
+            //        await _rolemanager.CreateAsync(new IdentityRole(role));
+            //    }
+            //}
+
+
+
+            //var user = await _usermanager.FindByEmailAsync("okudopato@gmail.com");
+
+            //if (user.EmailConfirmed)
+            //{
+            //    await _usermanager.AddToRoleAsync(user, "Admin");
+            //    await _usermanager.AddToRoleAsync(user, "Cashier");
+            //}
             return View();
         }
 

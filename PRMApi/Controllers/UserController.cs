@@ -1,9 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using PRMApi.Data;
+using PRMApi.Models;
+using PRMDataManager.Library.DataAccess;
+using PRMDataManager.Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PRMApi.Controllers
@@ -13,18 +21,21 @@ namespace PRMApi.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
+        private readonly IConfiguration _config;
         private readonly ApplicationDbContext _context;
-
-        public UserController()
+        private readonly UserManager<IdentityUser> _usermanager;
+        public UserController(ApplicationDbContext context, UserManager<IdentityUser> usermanager, IConfiguration config)
         {
-            _context = new ApplicationDbContext();
+            _context = context;
+            _usermanager = usermanager;
+            _config = config;
         }
         // GET: User/Details/5
         [HttpGet]
         public UserModel GetUserById()
         {
-            string userId = RequestContext.Principal.Identity.GetUserId();
-            UserData data = new UserData();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); ///RequestContext.Principal.Identity.GetUserId();
+            UserData data = new UserData(_config);
 
             return data.GetUserById(userId).First();
         }
@@ -36,12 +47,10 @@ namespace PRMApi.Controllers
         {
             List<ApplicationUserModel> output = new List<ApplicationUserModel>();
 
-
-            var userStore = new UserStore<ApplicationUser>(_context);
-            var userManager = new UserManager<ApplicationUser>(userStore);
-
-            var users = userManager.Users.ToList();
-            var roles = _context.Roles.ToList();
+            var users = _context.Users.ToList();
+            var userRoles = from ur in _context.UserRoles
+                            join r in _context.Roles on ur.RoleId equals r.Id
+                            select new { ur.UserId, ur.RoleId, r.Name };
 
             foreach (var user in users)
             {
@@ -51,10 +60,7 @@ namespace PRMApi.Controllers
                     Email = user.Email
                 };
 
-                foreach (var r in user.Roles)
-                {
-                    u.Roles.Add(r.RoleId, roles.Where(x => x.Id == r.RoleId).FirstOrDefault().Name);
-                }
+                u.Roles = userRoles.Where(x => x.UserId == u.Id).ToDictionary(key => key.RoleId, val => val.Name);
 
                 output.Add(u);
             }
@@ -73,24 +79,21 @@ namespace PRMApi.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("api/User/Admin/AddRole")]
-        public void AddRole(UserRolePairModel pairing)
+        public async Task AddRole(UserRolePairModel pairing)
         {
-
-            var userStore = new UserStore<ApplicationUser>(_context);
-            var userManager = new UserManager<ApplicationUser>(userStore);
-
-            userManager.AddToRole(pairing.UserId, pairing.RoleName);
+            var user = await _usermanager.FindByIdAsync(pairing.UserId);
+            await _usermanager.AddToRoleAsync(user, pairing.RoleName);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("api/User/Admin/RemoveRole")]
-        public void RemoveRole(UserRolePairModel pairing)
+        public async Task RemoveRole(UserRolePairModel pairing)
         {
-            var userStore = new UserStore<ApplicationUser>(_context);
-            var userManager = new UserManager<ApplicationUser>(userStore);
 
-            userManager.RemoveFromRole(pairing.UserId, pairing.RoleName);
+            var user = await _usermanager.FindByIdAsync(pairing.UserId);
+            await _usermanager.RemoveFromRoleAsync(user, pairing.RoleName);
         }
     }
 }
+
