@@ -13,6 +13,10 @@ namespace PRMDataManager.Library.DataAccess
     {
         private readonly IConfiguration _config;
 
+        public InventoryData()
+        {
+
+        }
         public InventoryData(IConfiguration config)
         {
             _config = config;
