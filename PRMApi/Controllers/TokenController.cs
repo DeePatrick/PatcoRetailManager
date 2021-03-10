@@ -29,24 +29,26 @@ namespace PRMApi.Controllers
 
         [Route("/token")]
         [HttpPost]
-        public async Task Create(string username, string password, string grant_type)
+        public async Task <IActionResult> Create(string username, string password, string grant_type)
         {
             if (await IsValidUsernameAndPassword(username, password))
             {
-                await GenerateToken(username);
+                return new ObjectResult(await GenerateToken(username));
             }
             else
             {
-                BadRequest();
+                return BadRequest();
             }
         }
 
+        [HttpPost]
         private async Task<bool> IsValidUsernameAndPassword(string username, string password)
         {
             var user = await _usermanager.FindByEmailAsync(username);
             return await _usermanager.CheckPasswordAsync(user, password);
         }
 
+        [HttpPost]
         private async Task<dynamic> GenerateToken(string username)
         {
             var user = await _usermanager.FindByEmailAsync(username);
@@ -73,8 +75,13 @@ namespace PRMApi.Controllers
                     SecurityAlgorithms.HmacSha256)),
                     new JwtPayload(claims));
 
+            var output = new
+            {
+                Access_Token = new JwtSecurityTokenHandler().WriteToken(token),
+                UserName = username
+            };
 
-            return token;
+            return output;
         }
     }
 }

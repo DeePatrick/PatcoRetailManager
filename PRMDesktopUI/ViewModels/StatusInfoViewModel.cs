@@ -20,7 +20,7 @@ namespace PRMDesktopUI.ViewModels
         }
         public void Close()
         {
-            TryClose();
+            TryCloseAsync();
         }
 
     }

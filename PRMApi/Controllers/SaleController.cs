@@ -23,6 +23,7 @@ namespace PRMApi.Controllers
             _config = config;
         }
         [Authorize(Roles = "Cashier")]
+        [HttpPost]
         public void Post(SaleModel sale)
         {
             SaleData data = new SaleData(_config);
@@ -32,6 +33,7 @@ namespace PRMApi.Controllers
 
         [Authorize(Roles = "Manager")]
         [Route("GetSalesReport")]
+        [HttpGet]
         public List<SaleReportModel> Get()
         {
             SaleData data = new SaleData(_config);

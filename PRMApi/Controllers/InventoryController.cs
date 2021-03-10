@@ -22,11 +22,14 @@ namespace PRMApi.Controllers
         {
             _config = config;
         }
+
+        [HttpGet]
         public List<InventoryModel> Get()
         {
             InventoryData data = new InventoryData(_config);
             return data.GetInventory();
         }
+        [HttpPost]
         public void Post(InventoryModel Inventory)
         {
             InventoryData data = new InventoryData(_config);
