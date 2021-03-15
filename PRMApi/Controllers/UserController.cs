@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using PRMApi.Data;
 using PRMApi.Models;
 using PRMDataManager.Library.DataAccess;
@@ -21,23 +22,23 @@ namespace PRMApi.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _usermanager;
-        public UserController(ApplicationDbContext context, UserManager<IdentityUser> usermanager, IConfiguration config)
+        private readonly IUserData _userData;
+        private readonly ILogger<UserController> _logger;
+        public UserController(ApplicationDbContext context, UserManager<IdentityUser> usermanager, IUserData userData, ILogger<UserController> logger)
         {
             _context = context;
             _usermanager = usermanager;
-            _config = config;
+            _userData = userData;
+            _logger = logger;
         }
 
         [HttpGet]
         public UserModel GetUserById()
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); ///RequestContext.Principal.Identity.GetUserId();
-            UserData data = new UserData(_config);
-
-            return data.GetUserById(userId).First();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
+            return _userData.GetUserById(userId).First();
         }
 
         [Authorize(Roles = "Admin")]
@@ -81,7 +82,14 @@ namespace PRMApi.Controllers
         [Route("Admin/AddRole")]
         public async Task AddRole(UserRolePairModel pairing)
         {
+            string loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _userData.GetUserById(loggedInUserId).First();
+
             var user = await _usermanager.FindByIdAsync(pairing.UserId);
+
+            _logger.LogInformation("Admin {Admin} added user {User} to role {Role}", 
+                loggedInUser.FirstName + " " + loggedInUser.LastName, user.Id, pairing.RoleName);
+
             await _usermanager.AddToRoleAsync(user, pairing.RoleName);
         }
 
@@ -90,8 +98,15 @@ namespace PRMApi.Controllers
         [Route("Admin/RemoveRole")]
         public async Task RemoveRole(UserRolePairModel pairing)
         {
+            string loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUser = _userData.GetUserById(loggedInUserId).First();
+
 
             var user = await _usermanager.FindByIdAsync(pairing.UserId);
+
+            _logger.LogInformation("Admin {Admin} removed user {User} from role {Role}",
+                loggedInUser.FirstName + " " + loggedInUser.LastName, user.Id, pairing.RoleName);
+
             await _usermanager.RemoveFromRoleAsync(user, pairing.RoleName);
         }
     }

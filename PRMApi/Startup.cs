@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using PRMDataManager.Library.DataAccess;
+using PRMDataManager.Library.Internal.DataAccess;
 
 namespace PRMApi
 {
@@ -67,6 +69,15 @@ namespace PRMApi
                     });
             });
             services.AddControllersWithViews();
+            services.AddRazorPages();
+
+            
+            services.AddTransient<IInventoryData, InventoryData>();          
+            services.AddTransient<IProductData, ProductData>();
+            services.AddTransient<ISaleData, SaleData>();
+            services.AddTransient<IUserData, UserData>();
+            services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

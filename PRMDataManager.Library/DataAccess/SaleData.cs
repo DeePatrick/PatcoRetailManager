@@ -9,24 +9,20 @@ using PRMDataManager.Library.Models;
 
 namespace PRMDataManager.Library.DataAccess
 {
-    public class SaleData
+    public class SaleData : ISaleData
     {
-        private readonly IConfiguration _config;
-
-        public SaleData()
+        private readonly ISqlDataAccess _sql;
+        private readonly IProductData _productData;
+        public SaleData(ISqlDataAccess sql, IProductData productData)
         {
-
-        }
-        public SaleData(IConfiguration config)
-        {
-            _config = config;
+            _sql = sql;
+            _productData = productData;
         }
         public void SaveSale(SaleModel saleInfo, string cashierId)
         {
 
             // Start filling in the sales detail models with save to database
             List<SaleDetailDBModel> details = new List<SaleDetailDBModel>();
-            ProductData products = new ProductData(_config);
             var taxRate = ConfigHelper.GetTaxRate() / 100;
 
             foreach (var item in saleInfo.SaleDetails)
@@ -39,7 +35,7 @@ namespace PRMDataManager.Library.DataAccess
 
                 //Get information about the product sold
 
-                var productInfo = products.GetProductById(detail.ProductId);
+                var productInfo = _productData.GetProductById(detail.ProductId);
 
                 // Fill in the available information
                 if (productInfo == null)
@@ -69,40 +65,36 @@ namespace PRMDataManager.Library.DataAccess
 
             sale.Total = sale.SubTotal + sale.Tax;
 
-            
-            using (SqlDataAccess sql = new SqlDataAccess(_config))
+            try
             {
-                try
-                {
-                    sql.StartTransaction("PRMData");
-                    // Save the sale model
-                    sql.SaveDataInTransaction("[dbo].[spSale_Insert]", sale);
-                    // Get the Id from the sale Model
-                    sale.Id = sql.LoadDataInTransaction<int, dynamic>("[dbo].[spSale_Lookup]", new { sale.CashierId, sale.SaleDate }).FirstOrDefault();
+                _sql.StartTransaction("PRMData");
+                // Save the sale model
+                _sql.SaveDataInTransaction("[dbo].[spSale_Insert]", sale);
+                // Get the Id from the sale Model
+                sale.Id = _sql.LoadDataInTransaction<int, dynamic>("[dbo].[spSale_Lookup]", new { sale.CashierId, sale.SaleDate }).FirstOrDefault();
 
-                    // Finish filling in the sale detail model
-                    foreach (var item in details)
-                    {
-                        item.SaleId = sale.Id;
-                        // save the sale detail model
-                        sql.SaveDataInTransaction("[dbo].[spSaleDetail_Insert]", item);
-                    }
-                    
-                    sql.CommitTransaction();
-                }
-                catch
+                // Finish filling in the sale detail model
+                foreach (var item in details)
                 {
-                    sql.RollBackTransaction();
-                    throw;
+                    item.SaleId = sale.Id;
+                    // save the sale detail model
+                    _sql.SaveDataInTransaction("[dbo].[spSaleDetail_Insert]", item);
                 }
 
-            }          
+                _sql.CommitTransaction();
+            }
+            catch
+            {
+                _sql.RollBackTransaction();
+                throw;
+            }
+
+
         }
 
         public List<SaleReportModel> GetSaleReports()
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
-            var output = sql.LoadData<SaleReportModel, dynamic>("[dbo].[spSale_SaleReport]", new { }, "PRMData");
+            var output = _sql.LoadData<SaleReportModel, dynamic>("[dbo].[spSale_SaleReport]", new { }, "PRMData");
             return output;
         }
     }

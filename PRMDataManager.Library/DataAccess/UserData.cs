@@ -9,24 +9,19 @@ using System.Threading.Tasks;
 
 namespace PRMDataManager.Library.DataAccess
 {
-    public class UserData
+    public class UserData : IUserData
     {
 
-        private readonly IConfiguration _config;
+        private readonly ISqlDataAccess _sql;
 
-        public UserData()
+        public UserData(ISqlDataAccess sql)
         {
-
-        }
-        public UserData(IConfiguration config)
-        {
-            _config = config;
+            _sql = sql;
         }
         public List<UserModel> GetUserById(string Id)
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
             var p = new { pId = Id };
-            var output = sql.LoadData<UserModel, dynamic>("[dbo].[spUserLookUp]", p, "PRMData");
+            var output = _sql.LoadData<UserModel, dynamic>("[dbo].[spUserLookUp]", p, "PRMData");
             return output;
         }
     }
