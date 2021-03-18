@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "PRMData", "PRMData\PRMData.sqlproj", "{E3887305-D8C3-43E5-9FBE-1AC863485ACA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRMDesktopUI", "PRMDesktopUI\PRMDesktopUI.csproj", "{9438301B-E2FF-4478-ADA8-B42D5EA6E786}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PRMDesktopUI", "PRMDesktopUI\PRMDesktopUI.csproj", "{9438301B-E2FF-4478-ADA8-B42D5EA6E786}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PRMDataManager.Library", "PRMDataManager.Library\PRMDataManager.Library.csproj", "{A7FA107A-B483-4951-B8A0-E78CACC4D114}"
 EndProject
@@ -23,6 +23,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		RoadMap.txt = RoadMap.txt
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApps", "WebApps", "{C5FDE952-8CD6-459A-9F83-F542C48F92FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal", "Portal\Portal.csproj", "{5B967AF0-609F-45BF-896A-7CF3F7ACA69E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +56,10 @@ Global
 		{87DFB4F8-FC04-4D5A-BACD-DC9AFDA9E9D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87DFB4F8-FC04-4D5A-BACD-DC9AFDA9E9D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87DFB4F8-FC04-4D5A-BACD-DC9AFDA9E9D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B967AF0-609F-45BF-896A-7CF3F7ACA69E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B967AF0-609F-45BF-896A-7CF3F7ACA69E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B967AF0-609F-45BF-896A-7CF3F7ACA69E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B967AF0-609F-45BF-896A-7CF3F7ACA69E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +70,7 @@ Global
 		{A7FA107A-B483-4951-B8A0-E78CACC4D114} = {8DBC6916-FAA3-426A-8E30-16FBB33A307C}
 		{A0715AC6-9176-4061-9D02-462C67446193} = {AE15A826-77BE-4F31-AABB-F83F171DEA20}
 		{87DFB4F8-FC04-4D5A-BACD-DC9AFDA9E9D8} = {8DBC6916-FAA3-426A-8E30-16FBB33A307C}
+		{5B967AF0-609F-45BF-896A-7CF3F7ACA69E} = {C5FDE952-8CD6-459A-9F83-F542C48F92FB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {289C1B06-529C-4CF1-A12C-D8A997D729F5}
