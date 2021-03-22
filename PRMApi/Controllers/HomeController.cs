@@ -32,27 +32,27 @@ namespace PRMApi.Controllers
         //temp for database
         public async Task<IActionResult> Privacy()
         {
-            //string[] roles = { "Admin", "Manager", "Cashier" };
+            string[] roles = { "Admin", "Manager", "Cashier" };
 
-            //foreach (var role in roles)
-            //{
-            //    var roleExist = await _rolemanager.RoleExistsAsync(role);
+            foreach (var role in roles)
+            {
+                var roleExist = await _rolemanager.RoleExistsAsync(role);
 
-            //    if (roleExist == false)
-            //    {
-            //        await _rolemanager.CreateAsync(new IdentityRole(role));
-            //    }
-            //}
+                if (roleExist == false)
+                {
+                    await _rolemanager.CreateAsync(new IdentityRole(role));
+                }
+            }
 
 
 
-            //var user = await _usermanager.FindByEmailAsync("okudopato@gmail.com");
+            var user = await _usermanager.FindByEmailAsync("okudopato@gmail.com");
 
-            //if (user.EmailConfirmed)
-            //{
-            //    await _usermanager.AddToRoleAsync(user, "Admin");
-            //    await _usermanager.AddToRoleAsync(user, "Cashier");
-            //}
+            if (user.EmailConfirmed)
+            {
+                await _usermanager.AddToRoleAsync(user, "Admin");
+                await _usermanager.AddToRoleAsync(user, "Cashier");
+            }
             return View();
         }
 

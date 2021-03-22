@@ -4,7 +4,7 @@ namespace Portal.Models
 {
     public interface IAuthenticationService
     {
-        Task<AuthenticatedUser> Login(AuthenticationUserModel userForAuthentication);
+        Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication);
         Task Logout();
     }
 }

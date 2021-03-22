@@ -11,20 +11,22 @@ using System.Threading.Tasks;
 
 namespace Portal.Models
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService :  IAuthenticationService
     {
-        private readonly HttpClient _apiClient;
+        private readonly HttpClient _httpClient;
         private readonly AuthenticationStateProvider _authStateProvider;
         private readonly ILocalStorageService _localStorage;
 
         public AuthenticationService(HttpClient httpClient, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
         {
-            _apiClient = httpClient;
+            _httpClient = httpClient;
             _authStateProvider = authStateProvider;
             _localStorage = localStorage;
         }
 
-        public async Task<AuthenticatedUser> Login(AuthenticationUserModel userForAuthentication)
+
+
+        public async Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication)
         {
             var data = new FormUrlEncodedContent(new[]
             {
@@ -33,31 +35,36 @@ namespace Portal.Models
                 new KeyValuePair<string, string>("password", userForAuthentication.Password),
             });
 
-            var authResult = await _apiClient.PostAsync("https://localhost:5001/token", data);
+            //var authResult = await _httpClient.PostAsync("/Token", data);
+            var authResult = await _httpClient.PostAsync("https://localhost:5001/token", data);
             var authContent = await authResult.Content.ReadAsStringAsync();
 
-            if (authResult.IsSuccessStatusCode == false)
+            if (authResult.IsSuccessStatusCode)
             {
-                return null;
-            }
-
-            var result = JsonSerializer.Deserialize<AuthenticatedUser>(authContent,
+                var result = JsonSerializer.Deserialize<AuthenticatedUserModel>(authContent,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            await _localStorage.SetItemAsync(key: "authToken", data: result.Access_Token);
+                await _localStorage.SetItemAsync(key: "authToken", data: result.Access_Token);
 
-            ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Access_Token);
+                ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Access_Token);
 
-            _apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: "bearer", parameter: result.Access_Token);
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: "bearer", parameter: result.Access_Token);
 
-            return result;
+                return result;
+            }
+            else
+            {
+                throw new Exception(authResult.ReasonPhrase);
+            }
+
+
         }
 
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync(key: "authToken");
             ((AuthStateProvider)_authStateProvider).NoitifyUserLogOut();
-            _apiClient.DefaultRequestHeaders.Authorization = null;
+            _httpClient.DefaultRequestHeaders.Authorization = null;
         }
     }
 }
