@@ -23,5 +23,10 @@
     "date": "2018-05-10",
     "temperatureC": -2,
     "summary": "Chilly"
+  },
+  {
+    "date": "2021-04-10",
+    "temperatureC": 60,
+    "summary": "Scorching"
   }
 ]

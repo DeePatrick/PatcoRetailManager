@@ -1,6 +1,20 @@
 ﻿@page "/counter"
 
 <h1>Counter</h1>
+<AuthorizeView Roles="Manager,Cashier">
+    <Authorized>
+        <h4>@context.User.FindFirst(ClaimTypes.Name).Value is authorized.</h4>
+@*        <ul>
+            <li>Access to Admin Role : @context.User.IsInRole("Admin")</li>
+            <li>Access to Cashier Role : @context.User.IsInRole("Cashier")</li>
+            <li>Access to Manager Role :@context.User.IsInRole("Manager")</li>
+        </ul>*@
+    </Authorized>
+    <NotAuthorized>
+        The user is not authorized.
+    </NotAuthorized>
+</AuthorizeView>
+
 
 <p>Current count: @currentCount</p>
 
