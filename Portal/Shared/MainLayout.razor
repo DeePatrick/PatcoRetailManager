@@ -7,11 +7,26 @@
 
     <div class="main">
         <div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+            <AuthorizeView>
+                <Authorized>
+
+                </Authorized>
+                <NotAuthorized>
+                    <LogIn />
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <div class="content px-4">
-            @Body
+            <AuthorizeView>
+                <Authorized>
+                     @Body
+                </Authorized>
+                <NotAuthorized>
+                   You need to be logged In to view this website information.
+                </NotAuthorized>
+            </AuthorizeView>
+            
         </div>
     </div>
 </div>
