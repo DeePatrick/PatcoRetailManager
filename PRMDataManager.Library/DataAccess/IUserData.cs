@@ -6,5 +6,7 @@ namespace PRMDataManager.Library.DataAccess
     public interface IUserData
     {
         List<UserModel> GetUserById(string Id);
+
+        void SaveUser(UserModel userInfo);
     }
 }

@@ -24,5 +24,11 @@ namespace PRMDataManager.Library.DataAccess
             var output = _sql.LoadData<UserModel, dynamic>("[dbo].[spUserLookUp]", p, "PRMData");
             return output;
         }
+
+        public void SaveUser(UserModel userInfo)
+        {
+            _sql.SaveData("[dbo].[spUser_Insert]", userInfo, "PRMData");
+        }
     }
 }
+

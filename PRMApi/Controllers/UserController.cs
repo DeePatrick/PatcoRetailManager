@@ -41,6 +41,55 @@ namespace PRMApi.Controllers
             return _userData.GetUserById(userId).First();
         }
 
+        public record UserRegistrationModel(string FirstName, string LastName, string EmailAddress, string Password);
+ 
+        [HttpPost]
+        [Route("User/Register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(UserRegistrationModel user)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var existingUser = await _usermanager.FindByEmailAsync(user.EmailAddress);
+                if(existingUser is null)
+                {
+                    IdentityUser newUser = new() {
+                        Email = user.EmailAddress,
+                        EmailConfirmed = true,
+                        TwoFactorEnabled = false,
+                        UserName = user.EmailAddress
+                    };
+
+                    var result = await _usermanager.CreateAsync(newUser, user.Password);
+
+                    if (result.Succeeded)
+                    {
+                        var addedUser = await _usermanager.FindByEmailAsync(user.EmailAddress);
+
+                        if(addedUser is not null)
+                        {
+                            UserModel userInfo = new()
+                            {
+                                Id = addedUser.Id,
+                                EmailAddress = addedUser.Email,
+                                FirstName = user.FirstName,
+                                LastName = user.LastName,
+                                CreateDate = DateTime.Now
+                            };
+
+                            _userData.SaveUser(userInfo);
+                        }
+
+                        return Ok();
+                    }
+                }
+               
+            }
+
+            return BadRequest();
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("Admin/GetAllUsers")]
