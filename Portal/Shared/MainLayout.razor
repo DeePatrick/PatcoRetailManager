@@ -9,7 +9,10 @@
         <div class="top-row px-4">
             <AuthorizeView>
                 <Authorized>
-
+                    Hi @context.User.FindFirst(ClaimTypes.Name).Value
+                    <NavLink class="nav-link" href="logout">
+                        <span class="oi oi-account-logout"></span> Log Out
+                    </NavLink>
                 </Authorized>
                 <NotAuthorized>
                     <LogIn />
@@ -18,15 +21,7 @@
         </div>
 
         <div class="content px-4">
-            <AuthorizeView>
-                <Authorized>
-                     @Body
-                </Authorized>
-                <NotAuthorized>
-                   You need to be logged In to view this website information.
-                </NotAuthorized>
-            </AuthorizeView>
-            
+            @Body
         </div>
     </div>
 </div>
