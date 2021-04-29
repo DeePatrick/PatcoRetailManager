@@ -44,7 +44,7 @@ namespace PRMApi.Controllers
         public record UserRegistrationModel(string FirstName, string LastName, string EmailAddress, string Password);
  
         [HttpPost]
-        [Route("User/Register")]
+        [Route("Register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(UserRegistrationModel user)
         {
@@ -65,25 +65,66 @@ namespace PRMApi.Controllers
 
                     if (result.Succeeded)
                     {
-                        var addedUser = await _usermanager.FindByEmailAsync(user.EmailAddress);
 
-                        if(addedUser is not null)
+                        try
                         {
-                            UserModel userInfo = new()
-                            {
-                                Id = addedUser.Id,
-                                EmailAddress = addedUser.Email,
-                                FirstName = user.FirstName,
-                                LastName = user.LastName,
-                                CreateDate = DateTime.Now
-                            };
+                            var addedUser = await _usermanager.FindByEmailAsync(user.EmailAddress);
 
-                            _userData.SaveUser(userInfo);
+                            if (addedUser is not null)
+                            {
+                                UserModel userInfo = new()
+                                {
+                                    Id = addedUser.Id,
+                                    EmailAddress = addedUser.Email,
+                                    FirstName = user.FirstName,
+                                    LastName = user.LastName,
+                                    CreateDate = DateTime.Now
+                                };
+
+                                _userData.SaveUser(userInfo);
+
+                                return Ok();
+                            }
+
+                            
+                        }
+                        catch (Exception ex)
+                        {
+
+                            _logger.LogError(ex.Message, null);
                         }
 
-                        return Ok();
+                        
                     }
                 }
+                //else
+                //{
+                //    var existingId = existingUser.Id;
+                //    var existingUserdata = _userData.GetUserById(existingId);
+                //    if (existingUserdata.Count == 0)
+                //    {
+                //        try
+                //        {
+                //            UserModel userInfo = new()
+                //            {
+                //                Id = existingId,
+                //                EmailAddress = user.EmailAddress,
+                //                FirstName = user.FirstName,
+                //                LastName = user.LastName,
+                //                CreateDate = DateTime.Now
+                //            };
+
+                //            _userData.SaveUser(userInfo);
+
+                //            return Ok();
+                //        }
+                //        catch (Exception ex)
+                //        {
+
+                //            _logger.LogError(ex.Message, null);
+                //        }
+                //    }
+                //}
                
             }
 

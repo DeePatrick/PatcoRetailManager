@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using PRMDataManager.Library.Internal.DataAccess;
 using PRMDataManager.Library.Models;
 using System;
@@ -13,10 +14,12 @@ namespace PRMDataManager.Library.DataAccess
     {
 
         private readonly ISqlDataAccess _sql;
+        private readonly ILogger<UserData> _logger;
 
-        public UserData(ISqlDataAccess sql)
+        public UserData(ISqlDataAccess sql, ILogger<UserData> logger)
         {
             _sql = sql;
+            _logger = logger;
         }
         public List<UserModel> GetUserById(string Id)
         {
@@ -27,7 +30,15 @@ namespace PRMDataManager.Library.DataAccess
 
         public void SaveUser(UserModel userInfo)
         {
-            _sql.SaveData("[dbo].[spUser_Insert]", userInfo, "PRMData");
+            try
+            {
+                _sql.SaveData("[dbo].[spUser_Insert]", userInfo, "PRMData");
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex.Message, null);
+            }
         }
     }
 }
