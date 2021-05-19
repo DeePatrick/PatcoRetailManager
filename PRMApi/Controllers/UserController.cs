@@ -97,35 +97,39 @@ namespace PRMApi.Controllers
                         
                     }
                 }
-                //else
-                //{
-                //    var existingId = existingUser.Id;
-                //    var existingUserdata = _userData.GetUserById(existingId);
-                //    if (existingUserdata.Count == 0)
-                //    {
-                //        try
-                //        {
-                //            UserModel userInfo = new()
-                //            {
-                //                Id = existingId,
-                //                EmailAddress = user.EmailAddress,
-                //                FirstName = user.FirstName,
-                //                LastName = user.LastName,
-                //                CreateDate = DateTime.Now
-                //            };
+                else
+                {
+                    var existingId = existingUser.Id;
+                    if (existingId != null)
+                    {
+                        var existingUserdata = _userData.GetUserById(existingId);
+                        if (existingUserdata.Count == 0)
+                        {
+                            try
+                            {
+                                UserModel userInfo = new()
+                                {
+                                    Id = existingId,
+                                    EmailAddress = user.EmailAddress,
+                                    FirstName = user.FirstName,
+                                    LastName = user.LastName,
+                                    CreateDate = DateTime.Now
+                                };
 
-                //            _userData.SaveUser(userInfo);
+                                _userData.SaveUser(userInfo);
 
-                //            return Ok();
-                //        }
-                //        catch (Exception ex)
-                //        {
+                                return Ok();
+                            }
+                            catch (Exception ex)
+                            {
 
-                //            _logger.LogError(ex.Message, null);
-                //        }
-                //    }
-                //}
-               
+                                _logger.LogError(ex.Message, null);
+                            }
+                        }
+                    }
+                    
+                }
+
             }
 
             return BadRequest();

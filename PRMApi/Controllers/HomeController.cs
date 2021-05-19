@@ -46,13 +46,22 @@ namespace PRMApi.Controllers
 
 
 
-            var user = await _usermanager.FindByEmailAsync("okudopato@gmail.com");
+            var user = await _usermanager.FindByEmailAsync("ginika@gmail.com");
 
             if (user.EmailConfirmed)
             {
                 await _usermanager.AddToRoleAsync(user, "Admin");
                 await _usermanager.AddToRoleAsync(user, "Cashier");
             }
+
+            var user2 = await _usermanager.FindByEmailAsync("okudopato@gmail.com");
+
+            if (user2.EmailConfirmed)
+            {
+                await _usermanager.AddToRoleAsync(user2, "Admin");
+                await _usermanager.AddToRoleAsync(user2, "Cashier");
+            }
+
             return View();
         }
 
