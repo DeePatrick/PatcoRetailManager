@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using Portal.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
+using PRMDesktopUI.Library.Api;
+using PRMDesktopUI.Library.Models;
 
 namespace Portal
 {
@@ -26,6 +28,13 @@ namespace Portal
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+
+            builder.Services.AddSingleton<IAPIHelper, APIHelper>();
+            builder.Services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
+
+            builder.Services.AddTransient<IProductEndpoint, ProductEndpoint>();
+            builder.Services.AddTransient<IUserEndpoint, UserEndpoint>();
+            builder.Services.AddTransient<ISaleEndpoint, SaleEndpoint>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
